@@ -170,6 +170,9 @@ axVal2Index_lb(a::RangeAxis{<:Date}, v; fuzzy=false)=axVal2Index(a,DateTime(v)+a
 half(a) = a/2
 half(a::Day) = Millisecond(a)/2
 
+get_bb(ax::RangeAxis) = first(ax.values)-half(get_step(ax.values)), last(ax.values)+half(get_step(ax.values))
+    
+
 function axVal2Index(a::RangeAxis{<:Any,<:Any,<:AbstractRange},v;fuzzy=false)
   dt = v-first(a.values)
   r = round(Int,dt/step(a.values))+1
