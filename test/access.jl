@@ -115,6 +115,16 @@ end
   end;
   @test danom isa ESDL.Cubes.ESDLZarr.ZArrayCube
 
+  saveCube(danom, "mySavedZArrayCube")
+
+  @test danom isa ESDL.Cubes.ESDLZarr.ZArrayCube
+
+  danom=readcubedata(danom)
+  danom2=readcubedata(loadCube("mySavedZArrayCube"))
+
+  @test danom.axes==danom2.axes
+  @test danom.data==danom2.data
+
   ncf = tempname()
   exportcube(danom,ncf)
 
@@ -123,7 +133,7 @@ end
   @test ncread(ncf,"Lon") == 30.125:0.25:30.875
   @test ncread(ncf,"Lat") == 50.875:-0.25:50.125
   @test ncgetatt(ncf,"Time","units") == "days since 2001-01-01"
-  @test getAxis("Time",danom).values .- Date(2001) == Day.(ncread(ncf,"Time"))
+  @test getAxis("Time",danom).values .- DateTime(2001) == Millisecond.(Day.(ncread(ncf,"Time")))
 
 
   @test ncread(ncf,"gross_primary_productivity")[:,:,:] == permutedims(danom[:,:,:,1],(2,3,1))
